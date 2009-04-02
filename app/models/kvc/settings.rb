@@ -61,7 +61,7 @@ class KVC::Settings < ActiveRecord::Base
     end
   end
 
-  unless table_exists?
+  if !table_exists?
     ActiveRecord::Schema.define do
       create_table :kvc_settings do |t|
         t.string :key

@@ -11,8 +11,8 @@ mutable app settings in the database.
 
 == FEATURES/PROBLEMS
 
-  * Transparent: no generators or migrations to run.
-  * Powerful: quick access; automatic updates; scales quickly.
+* Transparent: no generators or migrations to run.
+* Powerful: quick access; automatic updates; scales quickly.
 
 For more rigidity/safety: http://github.com/stephencelis/acts_as_singleton
 
@@ -52,7 +52,7 @@ If need be, validate specific key values in an initializer:
 
 == REQUIREMENTS
 
-  * Rails 2.3.2 or greater.
+* Rails 2.3.2 or greater.
 
 
 == INSTALL
