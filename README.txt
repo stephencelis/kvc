@@ -1,0 +1,117 @@
+= KVC
+
+http://github.com/stephencelis/kvc
+
+
+== DESCRIPTION
+
+KVC (Key-Value Configuration) provides a powerful, transparent way to maintain
+mutable app settings in the database.
+
+
+== FEATURES/PROBLEMS
+
+  * Transparent: no generators or migrations to run.
+  * Powerful: quick access; automatic updates; scales quickly.
+
+For more rigidity/safety: http://github.com/stephencelis/acts_as_singleton
+
+
+== SYNOPSIS
+
+Need a mutable setting in the database? Just add it, KVC-style:
+
+  KVC.key = "value"
+
+
+You're set.
+
+Any value will do:
+
+  KVC.last_import = Time.zone.now
+
+
+However you do:
+
+  KVC.site_messages.unshift("Downtime expected at 0800.").pop
+
+
+Store related settings together in a hash to reduce queries:
+
+  KVC.homepage_settings = { ... }.with_indifferent_access
+  KVC.homepage_settings # => { ... }
+
+
+If need be, validate specific key values in an initializer:
+
+  # config/initializers/kvc_config.rb
+  KVC::Settings.config do
+    validates("password") { |value| value =~ /\d+/ }
+  end
+
+
+== REQUIREMENTS
+
+  * Rails 2.3.2 or greater.
+
+
+== INSTALL
+
+=== As a gem
+
+Install:
+
+  % gem install stephencelis-kvc --source=http://gems.github.com
+
+
+And configure:
+
+  config.gem "stephencelis-kvc",
+    :lib => "kvc",
+    :source => "http://gems.github.com"
+
+
+=== As a plugin
+
+Install:
+
+  % script/plugin install git://github.com/stephencelis/kvc.git
+
+
+Or submodule:
+
+  % git submodule add git://github.com/stephencelis/kvc.git vendor/plugins/kvc
+
+
+=== Anything else?
+
+Just restart your server, and you should be good to go. The key-value table
+will migrate transparently when the model first loads.
+
+If you uninstall the plugin, you will be prompted to drop the table (to drop
+the table at any time, execute the "kvc:drop_table" Rake task).
+
+
+== LICENSE
+
+(The MIT License)
+
+(c) 2009-* Stephen Celis, stephen@stephencelis.com.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy 
+of this software and associated documentation files (the "Software"), to deal 
+in the Software without restriction, including without limitation the rights 
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell 
+copies of the Software, and to permit persons to whom the Software is 
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
