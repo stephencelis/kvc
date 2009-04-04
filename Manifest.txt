@@ -2,8 +2,8 @@ History.txt
 Manifest.txt
 README.txt
 Rakefile
-app/models/kvc/settings.rb
 lib/kvc.rb
+lib/kvc/settings.rb
 lib/kvc/settings_proxy.rb
 tasks/kvc_tasks.rake
 test/kvc_test.rb
