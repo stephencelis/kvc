@@ -26,7 +26,7 @@ class KVCTest < ActiveSupport::TestCase
   end
 
   test "method_missing should re-raise if there are arguments" do
-    assert_raise NoMethodError do
+    assert_raise ArgumentError do
       KVC.this_should("not_work")
     end
   end

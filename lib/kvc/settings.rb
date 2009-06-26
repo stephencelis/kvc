@@ -43,14 +43,12 @@ class KVC::Settings < ActiveRecord::Base
 
   # Deserializes value from database.
   def value
-    @value ||= YAML.load(read_attribute(:value))
+    @value ||= YAML.load read_attribute(:value)
   end
 
   # Serializes value for database.
   def value=(input)
-    returning @value = input do
-      write_attribute :value, input.to_yaml
-    end
+    write_attribute :value, (@value = input).to_yaml
   end
 
   private

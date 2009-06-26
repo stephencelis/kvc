@@ -38,27 +38,28 @@ module KVC
   VERSION = "0.0.2"
 
   class << self
+    def [](key)
+      if setting = KVC::Settings.find_by_key(key)
+        KVC::SettingsProxy.new setting
+      elsif KVC::Settings.strict_keys?
+        raise NoMethodError, "undefined method `#{key}' for KVC:Module"
+      end
+    end
+
+    def []=(key, value)
+      setting = KVC::Settings.find_or_initialize_by_key(key)
+      setting.update_attributes! :value => value
+    end
+
     private
 
     # Handles the key-value magic.
     def method_missing(method, *args, &block)
       key = method.to_s
-      key.sub!(/^\[\](=?)$/) { "#{args.shift}#{$1}" }
-    
       if key.sub!(/=$/) {} # Is it a writer method?
-        returning args.shift do |value|
-          setting = KVC::Settings.find_or_initialize_by_key(key)
-          setting.update_attributes!(:value => value)
-        end
-      elsif setting = KVC::Settings.find_by_key(key) # Is it a reader?
-        if args.present?
-          error_message = "wrong number of arguments (#{args.length} for 0)"
-          raise ArgumentError, error_message
-        end
-    
-        KVC::SettingsProxy.new(setting)
-      elsif args.present? || KVC::Settings.strict_keys?
-        raise NoMethodError
+        self[key] = *args
+      else
+        self[key, *args]
       end
     end
   end
