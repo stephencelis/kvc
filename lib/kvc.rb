@@ -35,19 +35,20 @@
 #
 # Failed validations will raise <tt>ActiveRecord::RecordInvalid</tt>.
 module KVC
-  VERSION = "0.0.2"
+  VERSION = "0.0.3"
 
   class << self
     def [](key)
-      if setting = KVC::Settings.find_by_key(key)
+      if setting = KVC::Settings.find_by_key(key.to_s)
         KVC::SettingsProxy.new setting
       elsif KVC::Settings.strict_keys?
-        raise NoMethodError, "undefined method `#{key}' for KVC:Module"
+        raise NoMethodError,
+          "undefined method `#{key}' for #{self}:#{self.class}"
       end
     end
 
     def []=(key, value)
-      setting = KVC::Settings.find_or_initialize_by_key(key)
+      setting = KVC::Settings.find_or_initialize_by_key key.to_s
       setting.update_attributes! :value => value
     end
 

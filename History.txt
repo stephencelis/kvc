@@ -1,3 +1,15 @@
+=== 0.0.3 / 2009-06-27
+
+* 1 minor enhancement
+
+  * Optimize by relying less on method_missing.
+
+
+* 1 bugfix
+
+  * Don't confuse strings and symbols.
+
+
 === 0.0.2 / 2009-04-04
 
 * 1 minor enhancement
