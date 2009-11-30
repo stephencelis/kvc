@@ -7,6 +7,8 @@
 class KVC::SettingsProxy
   undef_method *instance_methods.grep(/^(?!__|nil\?|send)/)
 
+  attr_reader :setting
+
   def initialize(setting)
     @setting = setting
   end

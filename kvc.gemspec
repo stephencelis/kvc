@@ -10,10 +10,10 @@ Gem::Specification.new do |s|
   s.description = %q{KVC (Key-Value Configuration) provides a powerful, transparent way to maintain
 mutable app settings in the database.}
   s.email = ["stephen@stephencelis.com"]
-  s.extra_rdoc_files = ["History.txt", "Manifest.txt", "README.txt"]
-  s.files = ["History.txt", "Manifest.txt", "README.txt", "Rakefile", "lib/kvc.rb", "lib/kvc/settings.rb", "lib/kvc/settings_proxy.rb", "tasks/kvc_tasks.rake", "test/kvc_test.rb", "uninstall.rb"]
+  s.extra_rdoc_files = ["History.rdoc", "Manifest.txt", "README.rdoc"]
+  s.files = ["History.rdoc", "Manifest.txt", "README.rdoc", "Rakefile", "lib/kvc.rb", "lib/kvc/settings.rb", "lib/kvc/settings_proxy.rb", "tasks/kvc_tasks.rake", "test/kvc_test.rb", "uninstall.rb"]
   s.homepage = %q{http://github.com/stephencelis/kvc}
-  s.rdoc_options = ["--main", "README.txt"]
+  s.rdoc_options = ["--main", "README.rdoc"]
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{kvc}
   s.rubygems_version = %q{1.3.4}
