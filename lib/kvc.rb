@@ -18,7 +18,7 @@
 # Or get creative:
 #
 #   KVC["Chad's expensive guitar"] = Fender::Stratocaster.new(1957)
-# 
+#
 # By default, nonexistent keys return +nil+ values, but you can be stricter if
 # you want to avoid typo-based bugs:
 #
@@ -64,4 +64,8 @@ module KVC
       end
     end
   end
+end
+
+def KVC(key)
+  KVC[key]
 end

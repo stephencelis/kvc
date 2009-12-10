@@ -15,6 +15,7 @@ class KVC::Settings < ActiveRecord::Base
 
   @@validations = HashWithIndifferentAccess.new []
   cattr_reader :validations
+
   class << self
     alias strict_keys? strict_keys
 
@@ -43,12 +44,12 @@ class KVC::Settings < ActiveRecord::Base
 
   # Deserializes value from database.
   def value
-    @value ||= YAML.load read_attribute(:value)
+    @value ||= KVC::Record.deserialize YAML.load(read_attribute(:value))
   end
 
   # Serializes value for database.
   def value=(input)
-    write_attribute :value, (@value = input).to_yaml
+    write_attribute :value, KVC::Record.serialize(@value = input).to_yaml
   end
 
   private
