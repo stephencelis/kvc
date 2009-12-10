@@ -35,7 +35,7 @@
 #
 # Failed validations will raise <tt>ActiveRecord::RecordInvalid</tt>.
 module KVC
-  VERSION = "0.0.3"
+  VERSION = "0.1.0"
 
   class << self
     def [](key)

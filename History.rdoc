@@ -1,3 +1,10 @@
+=== 0.1.0 / 2009-12-10
+
+* 1 enhancement
+
+  * Reload database records by default.
+
+
 === 0.0.3 / 2009-06-27
 
 * 1 minor enhancement
