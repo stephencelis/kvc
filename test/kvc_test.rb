@@ -11,11 +11,30 @@ $: << File.expand_path(File.dirname(__FILE__) + "/../lib") <<
 ActiveRecord::Base.establish_connection :adapter => 'sqlite3',
                                         :database => ':memory:'
 
+ActiveRecord::Schema.define(:version => 1) do
+  create_table :guitars do |t|
+    t.string :make, :model
+    t.timestamps
+  end
+
+  create_table :keyboards do |t|
+    t.string :make, :model
+    t.timestamps
+  end
+end
+
 require "kvc"
 require "kvc/settings"
 require "kvc/settings_proxy"
 
 logger = Logger.new(STDOUT)
+
+class Guitar < ActiveRecord::Base
+end
+
+class Keyboard < ActiveRecord::Base
+  validates_presence_of :make
+end
 
 class KVCTest < ActiveSupport::TestCase
   teardown do
@@ -79,6 +98,55 @@ class KVCTest < ActiveSupport::TestCase
 
     KVC.favorite_year = 1984
     assert_kind_of Integer, KVC.favorite_year
+  end
+
+  test "models should serialize and deserialize updated versions" do
+    instruments = {
+      :guitars => {
+        :favorites => [
+          Guitar.create(:make => "Gibson", :model => "Melody Maker"),
+          Guitar.create(:make => "Epiphone", :model => "Les Paul"),
+        ],
+        :not_so_good => [
+          Guitar.create(:make => "Samick")
+        ]
+      },
+      :keyboard => Keyboard.create(:make => "Yamaha")
+    }
+
+    KVC.instruments = Marshal.load Marshal.dump(instruments) # Deep copy.
+    instruments[:keyboard].update_attribute(:model, "Privia PX-130")
+
+    assert_equal instruments, KVC.instruments
+    assert_equal instruments[:keyboard].model, KVC.instruments[:keyboard].model
+  end
+
+  test "should not reload records if record reloading is off" do
+    begin
+      KVC::Settings.reload_records = false
+      KVC.guitar = Guitar.create(:make => "Yamaha")
+      guitar = Guitar.last
+      guitar.update_attribute :make, "Yamahahaha"
+      assert_not_equal guitar.make, KVC.guitar.make
+    ensure
+      KVC::Settings.reload_records = true
+    end
+  end
+
+  test "unsaved models should deserialize" do
+    keyboard = Keyboard.new :model => "Some kind of synthesizer."
+    assert_nil keyboard.id
+    KVC["Which make was it again?"] = keyboard.clone # Unsaved copy.
+    assert_equal keyboard, KVC["Which make was it again?"]
+  end
+
+  test "missing models should raise exceptions" do
+    guitar = Guitar.create
+    KVC.ghost_guitar = guitar
+    guitar.destroy
+    assert_raise ActiveRecord::RecordNotFound do
+      KVC.ghost_guitar.touch
+    end
   end
 
   test "can set attributes with whitespace and symbols" do

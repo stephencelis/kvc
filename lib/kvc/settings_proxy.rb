@@ -16,11 +16,13 @@ class KVC::SettingsProxy
   private
 
   def method_missing(method, *args, &block)
-    return @setting.send(method) if [:created_at, :updated_at].include? method
+    return setting.send(method) if [:created_at, :updated_at].include? method
 
-    return_value = @setting.value.send(method, *args, &block)
-    if @setting.value != YAML.load(@setting.read_attribute(:value))
-      @setting.update_attribute :value, @setting.value
+    return_value = setting.value.send(method, *args, &block)
+    stored_value = KVC::Settings.deserialize YAML.load(setting[:value])
+
+    if setting.value != stored_value
+      setting.update_attribute :value, setting.value
       return self # Allow for chaining.
     end
 

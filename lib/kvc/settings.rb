@@ -13,11 +13,16 @@ class KVC::Settings < ActiveRecord::Base
   @@strict_keys = false
   cattr_accessor :strict_keys
 
+  # Reload serialized <tt>ActiveRecord::Base</tt> records.
+  @@reload_records = true
+  cattr_accessor :reload_records
+
   @@validations = HashWithIndifferentAccess.new []
   cattr_reader :validations
 
   class << self
-    alias strict_keys? strict_keys
+    alias strict_keys?    strict_keys
+    alias reload_records? reload_records
 
     # Config takes a block for configuration. For now, this provides
     # rudimentary validation. E.g.:
@@ -34,6 +39,23 @@ class KVC::Settings < ActiveRecord::Base
         self
       end.instance_eval(&block)
     end
+
+    # Recursively reload saved records. To short-circuit record reloading, set
+    # <tt>KVC::Settings.reload_records = false</tt>.
+    def deserialize(object)
+      return object unless reload_records?
+
+      case object
+      when ActiveRecord::Base
+        object.new_record? ? object : object.reload
+      when Array
+        object.map { |o| deserialize(o) }
+      when Hash
+        object.each { |k, v| object[k] = deserialize(v) }
+      else
+        object
+      end
+    end
   end
 
   # Active Record does not automatically namespace tables.
@@ -44,12 +66,12 @@ class KVC::Settings < ActiveRecord::Base
 
   # Deserializes value from database.
   def value
-    @value ||= KVC::Record.deserialize YAML.load(read_attribute(:value))
+    @value ||= KVC::Settings.deserialize YAML.load(read_attribute(:value))
   end
 
   # Serializes value for database.
   def value=(input)
-    write_attribute :value, KVC::Record.serialize(@value = input).to_yaml
+    write_attribute :value, (@value = input).to_yaml
   end
 
   private
