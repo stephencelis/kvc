@@ -1,13 +1,7 @@
 $: << File.dirname(__FILE__) + "/lib"
 require "rubygems"
-require "hoe"
 require "active_record"
 require "kvc"
-
-Hoe.new("kvc", KVC::VERSION) do |p|
-  p.developer("Stephen Celis", "stephen@stephencelis.com")
-  p.remote_rdoc_dir = ''
-end
 
 require 'rake'
 require 'rake/testtask'
