@@ -3,12 +3,13 @@ require 'rubygems'
 require 'active_record'
 require 'active_support'
 require 'active_support/test_case'
+ActiveRecord::Migration.verbose = false
 
 $: << File.expand_path(File.dirname(__FILE__) + "/../lib") <<
       File.expand_path(File.dirname(__FILE__) + "/../app/models")
 
 ActiveRecord::Base.establish_connection :adapter => 'sqlite3',
-                                        :dbfile => ':memory:'
+                                        :database => ':memory:'
 
 require "kvc"
 require "kvc/settings"
